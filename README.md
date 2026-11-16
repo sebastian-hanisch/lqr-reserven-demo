@@ -1,7 +1,6 @@
 # Reserven: Wie viel Modellfehler hält ein LQR aus? – Streamlit-Demo
 
-<!-- TODO nach dem Deploy: direkt hierher den Live-Link setzen (Leerzeile davor und danach):
-**[→ Demo live ausprobieren](https://sebastianhanisch-lqr-reserven-demo.streamlit.app/)** -->
+**[→ Demo live ausprobieren](https://sebastianhanisch-lqr-reserven-demo.streamlit.app/)**
 
 Diese Demo gehört zum Themenfeld **Regelung (von LQR bis MPC)** auf der Website „Sebastian Hanisch – Operations Research und Machine Learning“ und baut auf
 [`lqr-riccati-demo`](https://github.com/sebastian-hanisch/lqr-riccati-demo) auf: Dort liefert die Riccati-Gleichung den Gewinn K und Pole im Einheitskreis (R = 1: 0,378 ± 0,188 i, Spektralradius 0,422); **wie weit der Kreis
