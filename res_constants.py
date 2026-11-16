@@ -26,7 +26,7 @@ RS_MIN, RS_MAX, RS_STEP, DEFAULT_RS = 50, 300, 50, 200  # Zahl der Zufallssystem
 DEFAULTS = {"r": 1.0, "ts": 1.0, "bform": "euler", "a": 1.0, "m": 1.9, "q": 5.0, "dm": 1.02, "w": 1.0, "lform": "schaetz", "g": "b", "lq": "I",
             "lm": 1.3, "seed": DEFAULT_SEED, "n": DEFAULT_RS}
 
-TS_SERIES = (1.0, 0.5, 0.25, 0.1, 0.05, 0.01)           # Abtastzeit-Reihe (Experiment 3), wie in der Vormessung
+TS_SERIES = (1.0, 0.5, 0.25, 0.1, 0.05, 0.01)           # Abtastzeit-Reihe (Experiment 3)
 R_SERIES = (0.001, 0.01, 0.1, 1.0, 10.0, 100.0)         # Experiment 6 (Schranke am Wagen)
 DOYLE_QS = (1.0, 5.0, 12.0, 100.0, 1000.0, 10000.0, 100000.0, 1000000.0)
 LQG_W_GRID = (0.01, 1.0, 100.0, 10000.0, 100000000.0)   # die 90 vorgerechneten Entwürfe: 3 Regler × 2 Formen × 3 Rauschrichtungen × 5 Rauschstärken

@@ -5,8 +5,7 @@ Drei Bedeutungen von „Reserve“, immer mit Namen:
   * **Verstärkungsfenster** (g_unten, g_oben): Bereich des Faktors g in u = −g·K·x, in dem die Schleife stabil bleibt (g = Streckenverstärkung des Modellfehlers),
   * **Phasenreserve** 180° + arg L bei |L| = 1 (kleinste Durchtrittsstelle) und **Verzugsreserve** = Phasenreserve / Durchtrittsfrequenz, in Perioden.
 
-Herkunft: neu geschrieben nach Plan 04 der Linie „Regelung“ (die Wegwerf-Skripte `rg_v13_*` der Vormessung wurden gelesen, nicht kopiert). Die Doyle-Parameter stammen
-aus dem Quellenbericht der Planung (Stufe W: Doyle-Scan als Bild gelesen); hier wird nur nachgerechnet. Eigene Herleitung, geprüft in diesem Modell (keine Neuheitsaussage):
+Herkunft: neu geschrieben, nichts aus anderen Demos kopiert. Die Doyle-Parameter stammen aus Doyles Aufsatz (Scan, als Bild gelesen); hier wird nur nachgerechnet. Eigene Herleitung, geprüft in diesem Modell (keine Neuheitsaussage):
 Rückführdifferenz-Gleichung (R + BᵀPB)·|1 + L|² = R + ‖Q^{1/2}(zI − A)⁻¹B‖² und die Schranke min |1 + L| ≥ √(R/(R + BᵀPB)) für einen Eingang."""
 
 import math
@@ -297,7 +296,7 @@ def doyle_gains(q: float, sigma: float):
 
 
 def doyle_f(q: float) -> float:
-    """Gewinnbetrag f = 2 + √(4 + q): g = f·(1, 1) (Formel des Quellenberichts, hier nachgerechnet); für das Filter d = doyle_f(σ)."""
+    """Gewinnbetrag f = 2 + √(4 + q): g = f·(1, 1) (Formel aus Doyles Aufsatz, hier nachgerechnet); für das Filter d = doyle_f(σ)."""
     return 2.0 + math.sqrt(4.0 + q)
 
 
@@ -313,8 +312,8 @@ def doyle_stable(m: float, g, k) -> bool:
 
 
 def doyle_window_hurwitz(q: float):
-    """Fenster der Streckenverstärkung (m_unten, m_oben) für q = σ in Formeln: c₁(m) = d + f − 4 + 2(m − 1)·d·f, c₀(m) = 1 + (1 − m)·d·f (Formeln des
-    Quellenberichts, hier gegen np.poly bestätigt), c₃ und c₂ hängen nicht von m ab. Hurwitz Grad 4: c₃, c₀ > 0, c₃·c₂ − c₁ > 0, H = c₁(c₃c₂ − c₁) − c₃²c₀ > 0;
+    """Fenster der Streckenverstärkung (m_unten, m_oben) für q = σ in Formeln: c₁(m) = d + f − 4 + 2(m − 1)·d·f, c₀(m) = 1 + (1 − m)·d·f (Formeln aus
+    Doyles Aufsatz, hier gegen np.poly bestätigt), c₃ und c₂ hängen nicht von m ab. Hurwitz Grad 4: c₃, c₀ > 0, c₃·c₂ − c₁ > 0, H = c₁(c₃c₂ − c₁) − c₃²c₀ > 0;
     H ist in u = m − 1 quadratisch. Die obere Kante ist exakt 1 + 1/(d·f); die untere Kante der Quelle (nur c₁ > 0) ist nur notwendig."""
     g, k = doyle_gains(q, q)
     f = d = doyle_f(q)

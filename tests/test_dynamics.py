@@ -1,4 +1,4 @@
-"""Mini-Instanz-Tests von Hand (Handbeispiele H1 bis H5 des Plans, Brüche in Q(√5), `fractions`) für die Einheiten res_dynamics, res_exact und res_margins.
+"""Mini-Instanz-Tests von Hand (Handbeispiele H1 bis H5, Brüche in Q(√5), `fractions`) für die Einheiten res_dynamics, res_exact und res_margins.
 
 Jeder Erwartungswert steht als Rechnung im Test, nicht als vom Code abgeschriebene Zahl. Konvention: u = −K·x, Q = R = 1, Schleife am Streckeneingang geöffnet."""
 
@@ -98,7 +98,7 @@ def test_h3_deadbeat_gain_in_fractions():
 def test_h3_wagen_r1_jury_formula_by_hand(wagen_r1):
     a, b, p, k = wagen_r1
     k1, k2 = k[0]
-    assert k1 == pytest.approx(0.42208, abs=5e-6) and k2 == pytest.approx(1.24393, abs=5e-6)      # Handrechnung des Plans (V1)
+    assert k1 == pytest.approx(0.42208, abs=5e-6) and k2 == pytest.approx(1.24393, abs=5e-6)      # Handrechnung
     g_hand = min(2 / (k2 - k1), 4 / (2 * k2 - k1))                    # 2/0,82185 = 2,4336 und 4/2,06578 = 1,9363
     assert (2 / (k2 - k1)) == pytest.approx(2.4336, abs=5e-4) and (4 / (2 * k2 - k1)) == pytest.approx(1.9363, abs=5e-5)
     assert M.jury_window(a, b, k) == pytest.approx((0.0, g_hand), abs=1e-12)

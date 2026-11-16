@@ -3,13 +3,13 @@
 <!-- TODO nach dem Deploy: direkt hierher den Live-Link setzen (Leerzeile davor und danach):
 **[→ Demo live ausprobieren](https://sebastianhanisch-lqr-reserven-demo.streamlit.app/)** -->
 
-Stück 4 der Linie **Regelung (von LQR bis MPC)** in der „Konzepte“-Reihe für die Website „Sebastian Hanisch – Operations Research und Machine Learning“. Die Kante zum Vorgänger
-[`lqr-riccati-demo`](https://github.com/sebastian-hanisch/lqr-riccati-demo) ist eine Behebung (`fix`): Dort liefert die Riccati-Gleichung den Gewinn K und Pole im Einheitskreis (R = 1: 0,378 ± 0,188 i, Spektralradius 0,422); **wie weit der Kreis
-von der Instabilität entfernt ist, bleibt offen**. Dieses Stück misst es, am selben Wagen (Doppelintegrator) und mit derselben Konvention (u = −K·x, Euler-Form, Q = I). Es trennt drei Fälle: den **stetigen** Entwurf, **denselben Entwurf abgetastet** und den
-**Entwurf mit Schätzer** (LQG, Doyles Gegenbeispiel). Nachbarn der Linie: [`horizont-falle-demo`](https://github.com/sebastian-hanisch/horizont-falle-demo) (Gesetz mit endlichem Horizont, dessen Reserve hier nicht gemessen ist),
+Diese Demo gehört zum Themenfeld **Regelung (von LQR bis MPC)** auf der Website „Sebastian Hanisch – Operations Research und Machine Learning“ und baut auf
+[`lqr-riccati-demo`](https://github.com/sebastian-hanisch/lqr-riccati-demo) auf: Dort liefert die Riccati-Gleichung den Gewinn K und Pole im Einheitskreis (R = 1: 0,378 ± 0,188 i, Spektralradius 0,422); **wie weit der Kreis
+von der Instabilität entfernt ist, bleibt offen**. Diese Demo misst es, am selben Wagen (Doppelintegrator) und mit derselben Konvention (u = −K·x, Euler-Form, Q = I). Es trennt drei Fälle: den **stetigen** Entwurf, **denselben Entwurf abgetastet** und den
+**Entwurf mit Schätzer** (LQG, Doyles Gegenbeispiel). Verwandte Demos: [`horizont-falle-demo`](https://github.com/sebastian-hanisch/horizont-falle-demo) (Gesetz mit endlichem Horizont, dessen Reserve hier nicht gemessen ist),
 [`mpc-stellgrenzen-demo`](https://github.com/sebastian-hanisch/mpc-stellgrenzen-demo) und [`windup-pi-demo`](https://github.com/sebastian-hanisch/windup-pi-demo) (mit aktiver Stellgrenze ist die Schleife nichtlinear),
 [`regelung-verzug-demo`](https://github.com/sebastian-hanisch/regelung-verzug-demo) (Verzug und Rechenzeit; hier nur die Verzugsreserve als Zahl) und [`offsetfrei-demo`](https://github.com/sebastian-hanisch/offsetfrei-demo) (Störungsmodell mit Beobachter). Das Filter des LQG ist das der Demo
-[`kalman-filter-demo`](https://github.com/sebastian-hanisch/kalman-filter-demo) (erst vorhersagen, dann korrigieren); der Entwurf des Filters wird hier nicht gelehrt, nur seine Wirkung auf die Reserve gemessen. Aus der Schwesterlinie Rückkopplung
+[`kalman-filter-demo`](https://github.com/sebastian-hanisch/kalman-filter-demo) (erst vorhersagen, dann korrigieren); der Entwurf des Filters wird hier nicht gelehrt, nur seine Wirkung auf die Reserve gemessen. Aus den Demos zur Rückkopplung
 ([`lager-lieferzeit-demo`](https://github.com/sebastian-hanisch/lager-lieferzeit-demo), [`meldeverzug-demo`](https://github.com/sebastian-hanisch/meldeverzug-demo)) kommt die Begriffsbrücke: Der Spektralradius ρ dort entspricht hier den Polen der Schleife;
 neu ist der **Abstand der Ortskurve zu −1**. Das Lager ist hier nicht das Vehikel.
 
@@ -17,28 +17,28 @@ neu ist der **Abstand der Ortskurve zu −1**. Das Lager ist hier nicht das Vehi
 
 Ruhige Pole sagen nichts darüber, wie viel Modellfehler ein Regelkreis aushält. **Der LQR am Wagen mit R = 1 hat den Spektralradius 0,422 und ist trotzdem instabil, wenn die Strecke 1,94-mal so stark wirkt wie modelliert.** Gemessen werden drei Reserven, immer mit Namen:
 der **Nyquist-Abstand** min |1 + L(e^{jω})| (Schleife am Streckeneingang geöffnet, L(z) = K·(zI − A)⁻¹·B), das **Verstärkungsfenster** (Bereich des Faktors g in u = −g·K·x, in dem die Schleife stabil bleibt) und die **Phasenreserve** (180° + arg L bei |L| = 1, kleinste Durchtrittsstelle).
-Alles ist **eigene Nachrechnung in diesem Modell** (Wagen, Ts = 1, Euler-Form B = (0, Ts)ᵀ, Q = I, ein Eingang). Für den abgetasteten LQR gibt keine gelesene Quelle eine Reservegarantie an; für den stetigen LQR steht sie laut Quellenbericht bei Doyle (1978: 60° Phasenreserve, Verstärkung nach unten bis auf die Hälfte (−6 dB) und nach oben unbegrenzt,
+Alles ist **eigene Nachrechnung in diesem Modell** (Wagen, Ts = 1, Euler-Form B = (0, Ts)ᵀ, Q = I, ein Eingang). Für den abgetasteten LQR gibt keine gelesene Quelle eine Reservegarantie an; für den stetigen LQR steht sie bei Doyle (1978, als Scan-Bild gelesen: 60° Phasenreserve, Verstärkung nach unten bis auf die Hälfte (−6 dB) und nach oben unbegrenzt,
 Zuschreibung an Safonov/Athans; im Original nicht gelesen). Eine Neuheitsaussage gibt es nicht: Die Rückführdifferenz-Gleichung und die Schranke in Befund B8 sind eigene Herleitung; ob sie in Lehrbüchern stehen, ist ungelesen.
 
 ## Modell
 
-**Konvention (gilt für jede Zahl):** x⁺ = A·x + B·u, Regler u = −K·x, Kosten Σ xᵀQx + uᵀRu mit Q = I (kein Faktor ½), ein Eingang. Der Wagen hat A = [[1, Ts], [0, 1]]; **Euler-Form** B = (0, Ts)ᵀ (die Form der Linie), **Halte-Form** B = (Ts²/2, Ts)ᵀ. Q und R
+**Konvention (gilt für jede Zahl):** x⁺ = A·x + B·u, Regler u = −K·x, Kosten Σ xᵀQx + uᵀRu mit Q = I (kein Faktor ½), ein Eingang. Der Wagen hat A = [[1, Ts], [0, 1]]; **Euler-Form** B = (0, Ts)ᵀ (wie in den anderen Regelungs-Demos), **Halte-Form** B = (Ts²/2, Ts)ᵀ. Q und R
 gemeinsam mit Ts zu skalieren gibt denselben Gewinn; die Kosten gelten je Periode. Die Voreinstellung ist Ts = 1, Euler-Form, R = 1.
 - **Nyquist-Abstand** min |1 + L|: Gitter über ω in (0, π] mit Verfeinerung und dem Randpunkt ω = π einzeln; **Empfindlichkeitsspitze** 1/min |1 + L|.
 - **Verstärkungsfenster** (g_unten, g_oben): am Wagen exakt nach Jury (vier lineare Bedingungen in g), zweiter Weg Bisektion auf dem Spektralradius, dritter Weg der Nyquist-Schnitt −1/L(−1). „Stabil“ heißt Spektralradius < 1 − 10⁻¹²; ein Fensterrand ist nie „genau“ getroffen (dort ist ρ = 1 ± Rundungsrauschen).
-- **Verzugsreserve** = Phasenreserve / Durchtrittsfrequenz, in Perioden; nur eine Zahl, der Verzug selbst gehört dem Stück „Verzug“ der Linie.
+- **Verzugsreserve** = Phasenreserve / Durchtrittsfrequenz, in Perioden; nur eine Zahl, der Verzug selbst ist Thema von [`regelung-verzug-demo`](https://github.com/sebastian-hanisch/regelung-verzug-demo). Deren kritische Rechenzeit gehört zu einem anderen Modell (B = [½, 1]ᵀ) und ist mit dieser Zahl nicht verglichen.
 - **Streckenverstärkung m** (Modellfehler): die Strecke wirkt m-mal so stark wie modelliert, der Regler weiß es nicht (u wird zu m·u).
 - **LQG am Wagen:** gemessen wird die Position, Messrauschen 1, Prozessrauschen W·G·Gᵀ; **Schätzform** (u_k mit der Messung k) und **Vorhersage-Form** (u_k mit Messungen bis k − 1); der Gewinn K ist der des Zustands-LQR.
-- **Doyles Gegenbeispiel** (stetig): ẋ = [[1, 1], [0, 1]]·x + (0, 1)ᵀ·u + (1, 1)ᵀ·w, y = x₁ + v, Güte Q = q·(1, 1)ᵀ(1, 1), R = 1, Rauschintensitäten σ und 1, hier q = σ. Die Parameter stammen aus dem Quellenbericht (Doyle-Scan als Bild gelesen) und sind hier nachgerechnet.
+- **Doyles Gegenbeispiel** (stetig): ẋ = [[1, 1], [0, 1]]·x + (0, 1)ᵀ·u + (1, 1)ᵀ·w, y = x₁ + v, Güte Q = q·(1, 1)ᵀ(1, 1), R = 1, Rauschintensitäten σ und 1, hier q = σ. Die Parameter stammen aus Doyles Aufsatz (Scan, als Bild gelesen) und sind hier nachgerechnet.
 - Die Formeln stehen im Expander 📐 der App. Die Zufallssysteme der Schranke (Experiment 6) kommen aus einem ganzzahligen SplitMix64 mit exakten Logarithmus- und Kosinus-Routinen (`res_rng.py`); der Zufalls-Seed ist ein Regler.
 
 ## Methodik
 
 | Verfahren | Wie es arbeitet | Grenze |
 |---|---|---|
-| **Entwurf** (`res_dynamics.dlqr`) | DARE mit `scipy.linalg.solve_discrete_are`; zweiter Weg (nur in den Tests) die eigene Riccati-Rekursion aus P = Q | die Rekursion braucht Symmetrisierung in jedem Schritt (siehe „Befunde und Korrekturen“) |
+| **Entwurf** (`res_dynamics.dlqr`) | DARE mit `scipy.linalg.solve_discrete_are`; zweiter Weg (nur in den Tests) die eigene Riccati-Rekursion aus P = Q | die Rekursion braucht Symmetrisierung in jedem Schritt (siehe „Hinweise zu den Zahlen“) |
 | **Nyquist-Abstand** (`res_margins.min_return`) | Frequenzgang auf 20 001 Punkten, Verfeinerung um den Tiefstwert (Brent), Randpunkt π einzeln | Gitterverfahren; Lage des Tiefstwerts nicht vorausgesetzt (bei R = 10⁶ liegt er nicht genau bei π) |
-| **Fenster** (`jury_window`) | Jury für Systeme zweiter Ordnung in Formeln; Skalar in Formeln; LQG und Doyle über Eigenwerte (Gitter 0,001 bis 8, dann Bisektion; Doyle: Hurwitz vierten Grades in Formeln) | LQG-Fenster nur um m = 1 (zusammenhängend vorausgesetzt; die Vormessung `out_rg_v13_lqg_diskret.txt` zählte je Entwurf 1 oder 2 Wechsel stabil/instabil auf dem Gitter) |
+| **Fenster** (`jury_window`) | Jury für Systeme zweiter Ordnung in Formeln; Skalar in Formeln; LQG und Doyle über Eigenwerte (Gitter 0,001 bis 8, dann Bisektion; Doyle: Hurwitz vierten Grades in Formeln) | LQG-Fenster nur um m = 1 (zusammenhängend vorausgesetzt, nicht für jeden Entwurf geprüft) |
 | **Phasenreserve** (`phase_margins`) | Vorzeichenwechsel von \|L\| − 1 auf dem Gitter, Brent-Verfeinerung; kleinste über alle Durchtrittsstellen | klassische Reserve, keine Scheibenreserve |
 | **Zeitbereich** (`D.settle`) | freie Bahn aus (1, 0), Schritte bis ‖x‖ dauerhaft unter 1 % der Spitze, beobachtet bis 20 000 Perioden | nahe der Fensterkante „klingt kaum ab“; bei ρ ≥ 1 ohne Zahl |
 | **Zufallssysteme** (`bound_check`) | n = 2 bis 4, A, B, M normalverteilt (SplitMix64), Q = MMᵀ + 0,05·I, R von 0,01 bis 100, nur steuerbar (Rang und Kondition ≤ 10⁷) | Zählungen, nie einzelne Zahlen; DARE-Residuum < 10⁻¹⁰ filtert schlecht gelöste Fälle |
@@ -66,7 +66,7 @@ Der Abstand 1 − min |1 + L| ist für Ts ≤ 0,1 das 0,82- bis 0,86-Fache von T
 3 000 steuerbar und lösbar, 2 990 mit DARE-Residuum < 10⁻¹⁰; dort Gleichung bis 3,3·10⁻¹⁰, Determinantenbeziehung bis 3,3·10⁻¹²; 0 Verletzungen der Schranke und 0 Verletzungen des daraus folgenden Intervalls (1/(1 + r₀), 1/(1 − r₀)) (je System drei Stichproben); der kleinste Quotient gemessener Abstand / Schranke ist 1,00005
 (auf dem Gitter, also eine obere Näherung): die Schranke ist bei einzelnen Systemen fast scharf. Am Wagen ist sie für kleines R fast leer: r₀ = 0,4221 / 0,1832 / 0,0614 / 0,0195 gegen gemessen 0,4836 / 0,3720 / 0,3485 / 0,3458 (R = 1 / 0,1 / 0,01 / 0,001); garantiertes Intervall (0,703; 1,730) bei R = 1 und (0,942; 1,065) bei R = 0,01 gegen
 tatsächlich (0; 1,936) und (0; 1,535). Am Wagen ist r₀² gleich dem Produkt der Polbeträge (0,17815 bei R = 1). Stetig: an 3 000 Zufallssystemen (gleicher Zufalls-Seed, vorgerechnet) 0 Verletzungen von min |1 + L| ≥ 1 − 10⁻⁹ (kleinster Wert 1,0000000000).
-**B9: Doyles Gegenbeispiel, nachgerechnet.** Die Formeln des Quellenberichts stimmen: Reglergewinn g = f·(1, 1), f = 2 + √(4 + q); Filtergewinn k = d·(1, 1), d = 2 + √(4 + σ); die Koeffizienten c₁ = d + f − 4 + 2(m − 1)·d·f und c₀ = 1 + (1 − m)·d·f des charakteristischen Polynoms (Abweichung unter 10⁻⁹).
+**B9: Doyles Gegenbeispiel, nachgerechnet.** Die Formeln aus Doyles Aufsatz stimmen: Reglergewinn g = f·(1, 1), f = 2 + √(4 + q); Filtergewinn k = d·(1, 1), d = 2 + √(4 + σ); die Koeffizienten c₁ = d + f − 4 + 2(m − 1)·d·f und c₀ = 1 + (1 − m)·d·f des charakteristischen Polynoms (Abweichung unter 10⁻⁹).
 Fenster der Streckenverstärkung für q = σ = 1 / 5 / 12 / 100 / 1 596 / 10⁴ / 10⁶: (0,9208; 1,0557), (0,9150; 1,0400), (0,9144; 1,0278), **(0,9381; 1,0067)**, (0,9779; 1,00057), (0,99049; 1,000096), **(0,999005; 1,000001)**; die obere Kante ist exakt 1 + 1/(d·f), die untere kommt aus der Hurwitz-Bedingung vierten Grades (Abweichung gegen die Eigenwerte unter 10⁻⁶ der Fensterbreite).
 Der reine LQ-Regler ist für jedes m > 2/f stabil (Spur 2 − m·f, Determinante 1; 0,472 bei q = 1, 0,164 bei q = 100, 0,002 bei q = 10⁶) und nach oben ohne Grenze. |1 + L(0)| = 1/(1 + d·f) (0,0385 bei q = σ = 5, 0,00668 bei 100, 9,96·10⁻⁷ bei 10⁶), die Empfindlichkeitsspitze also 26,0 / 149,8 / 1,0·10⁶ gegen 1 beim LQ-Regler.
 **B10: LQG am abgetasteten Wagen** (Positionsmessung, Messrauschen 1, 90 Entwürfe, vorgerechnet: 3 Regler × 2 Formen × 3 Rauschrichtungen G × 5 Rauschstärken W). Nyquist-Abstand 0,1327 bis 0,5950, **unter dem des Zustands-LQR in 63 von 90 Entwürfen** (28 von 30, 21 von 30, 14 von 30 je Regler); die obere Fensterkante liegt in 32 von 90 sogar über der des Zustands-LQR;
@@ -107,23 +107,23 @@ Doyle q = σ = 5: Polynom s⁴ + 6s³ + 11s² + (6 + 50u)·s + (1 − 25u) mit u
 
 Alles, was nicht in dieser Tabelle steht (Rechenzeit, Lesbarkeit der Abbildungen), ist Messung dieser README und nicht im Test. Zahlen aus Zufallssystemen stehen nur als Zählungen mit ihrer Zahl n und dem Zufalls-Seed; einzelne Werte daraus sind nicht belegt.
 
-## Befunde und Korrekturen gegenüber dem Plan
+## Hinweise zu den Zahlen
 
-- **Fensterränder des LQG:** Die Vormessung las die Kanten von einem Gitter mit Schritt 0,001 ab (abgerundet); hier werden sie nach dem Gitter per Bisektion verfeinert und auf drei Stellen gerundet. Dadurch weichen einzelne Werte um 0,001 ab (Schätzform W = 0,01: 2,689 statt 2,688; Vorhersage W = 10⁴: 1,383 statt 1,382; Schätzform W = 1: 1,685 statt 1,684). Die neue Messung gilt.
-- **Zweiter Rechenweg des LQG:** größte Abweichung über die 90 Entwürfe 6,7·10⁻⁶ (der Plan nannte ≤ 5·10⁻⁶; Trennungsprinzip 2,1·10⁻⁷, im Plan 2·10⁻⁷). Die Toleranz im Test steht bei 10⁻⁵.
-- **Zufallssysteme:** neu gemessen mit dem ganzzahligen SplitMix64 (nicht dem NumPy-Generator der Vormessung): 3 000 von 3 000 steuerbar, 2 990 (Plan: 2 991) mit Residuum < 10⁻¹⁰, größte Abweichung der Gleichung 3,3·10⁻¹⁰ (Plan: ≤ 3,2·10⁻¹⁰), 0 Verletzungen. Neu: der kleinste Quotient 1,00005 (die Schranke ist bei einzelnen Systemen fast scharf), und die stetige Gegenprobe (0 Verletzungen in 3 000).
-- **Doyle, untere Kante:** Die Formel des Quellenberichts für die untere Kante („1 − (d + f − 4)/(2df) < m“) ist nur die notwendige Bedingung c₁ > 0; die wirkliche Kante folgt aus der Hurwitz-Bedingung und liegt höher: 0,9381 statt 0,9315 bei q = σ = 100, 0,9150 statt 0,8800 bei q = σ = 5. Die obere Kante und Doyles Aussage (das Fenster wird beliebig klein) bleiben bestätigt. Die Rechnung widerspricht damit der Formel im Bericht, nicht der Quelle selbst.
-- **Doyle, reiner LQ-Regler:** Die Vormessung nannte ihn „stabil bis zum Gitterrand 1 000“; hier ist es geschlossen: stabil für jedes m > 2/f (Spur 2 − m·f, Determinante 1), nach oben ohne Grenze.
-- **Phasenreserve stetig:** exakt per Nullstellensuche (72,38° / 79,23° / 85,25°); die Vormessung interpolierte auf dem Gitter (72,37° / 79,22° / 85,25°). Auf eine Stelle gerundet gleich (72,4° / 79,2° / 85,3°).
-- **Riccati-Rekursion als zweiter Weg:** Ohne Symmetrisierung in jedem Schritt lief sie bei Zufallssystemen mit instabilem A in einen Überlauf oder konvergierte nicht (13 von 25 Systemen des Zufalls-Seeds 4 bei Toleranz 10⁻¹² und höchstens 5 000 Schritten, alle mit instabilem A; die Zahl hängt an der Abbruchregel: bei Toleranz 10⁻¹⁰ sind es 9, bei 10⁻⁹ sind es 4; eine frühere Messung beim Bau nannte 14, sie ist nicht reproduziert; das Band 11 bis 15 steht im Test); mit Symmetrisierung konvergiert sie in 25 von 25 und stimmt mit SciPy überein (10⁻⁹ relativ im Test).
-- **Rauschrichtung G = (1, 0)ᵀ:** Die Demo weist sie ab, weil das Paar (A, G) nicht steuerbar ist (das Rauschen erreicht die Geschwindigkeit nie); der Plan sprach von „nicht stabilisierbar“.
-- **Schätzform als Standard** (Plan Z5a), die Vorhersage-Form als Variante; Doyle (stetig) in einem eigenen Experiment, der Wagen bleibt das Vehikel (Z5b); die Schranke steht hier mit „eigene Herleitung, geprüft“ (Z5c); die Verzugsreserve nur als Zahl (Z5d); die Loop-Transfer-Recovery im Diskreten bleibt offen (Z5e).
+- **Fensterränder des LQG:** Die Kanten werden von einem Gitter mit Schritt 0,001 abgelesen, danach per Bisektion verfeinert und auf drei Stellen gerundet. Ein bloßes Ablesen vom Gitter (abgerundet) kann um 0,001 niedriger liegen.
+- **Zweiter Rechenweg des LQG:** größte Abweichung über die 90 Entwürfe 6,7·10⁻⁶ (Trennungsprinzip 2,1·10⁻⁷). Die Toleranz im Test steht bei 10⁻⁵.
+- **Zufallssysteme:** gemessen mit dem ganzzahligen SplitMix64 (nicht dem NumPy-Generator): 3 000 von 3 000 steuerbar, 2 990 mit Residuum < 10⁻¹⁰, größte Abweichung der Gleichung 3,3·10⁻¹⁰, 0 Verletzungen; der kleinste Quotient ist 1,00005 (die Schranke ist bei einzelnen Systemen fast scharf), und die stetige Gegenprobe hat 0 Verletzungen in 3 000.
+- **Doyle, untere Kante:** Die zunächst aus der Quelle notierte Formel für die untere Kante („1 − (d + f − 4)/(2df) < m“) ist nur die notwendige Bedingung c₁ > 0; die wirkliche Kante folgt aus der Hurwitz-Bedingung und liegt höher: 0,9381 statt 0,9315 bei q = σ = 100, 0,9150 statt 0,8800 bei q = σ = 5. Die obere Kante und Doyles Aussage (das Fenster wird beliebig klein) bleiben bestätigt. Die Rechnung widerspricht damit der Notiz, nicht der Quelle selbst.
+- **Doyle, reiner LQ-Regler:** geschlossen gerechnet: stabil für jedes m > 2/f (Spur 2 − m·f, Determinante 1), nach oben ohne Grenze, nicht nur bis zu einem Gitterrand.
+- **Phasenreserve stetig:** exakt per Nullstellensuche (72,38° / 79,23° / 85,25°), auf eine Stelle gerundet 72,4° / 79,2° / 85,3°.
+- **Riccati-Rekursion als zweiter Weg:** Ohne Symmetrisierung in jedem Schritt lief sie bei Zufallssystemen mit instabilem A in einen Überlauf oder konvergierte nicht (13 von 25 Systemen des Zufalls-Seeds 4 bei Toleranz 10⁻¹² und höchstens 5 000 Schritten, alle mit instabilem A; die Zahl hängt an der Abbruchregel: bei Toleranz 10⁻¹⁰ sind es 9, bei 10⁻⁹ sind es 4; das Band 11 bis 15 steht im Test); mit Symmetrisierung konvergiert sie in 25 von 25 und stimmt mit SciPy überein (10⁻⁹ relativ im Test).
+- **Rauschrichtung G = (1, 0)ᵀ:** Die Demo weist sie ab, weil das Paar (A, G) nicht steuerbar ist (das Rauschen erreicht die Geschwindigkeit nie).
+- **Zuschnitt:** Die Schätzform ist der Standard, die Vorhersage-Form eine Variante; Doyle (stetig) hat ein eigenes Experiment, der Wagen bleibt das Vehikel; die Schranke steht hier mit „eigene Herleitung, geprüft“; die Verzugsreserve ist nur eine Zahl; die Loop-Transfer-Recovery im Diskreten bleibt offen.
 
 ## Ehrliche Grenzen
 
 - **Eine Strecke.** Der Wagen (und ein Skalar als Handbeispiel), Q = I (beim LQG auch Q = 100·(1, 1)ᵀ(1, 1)), ein Eingang. Strecken mit Nullstelle oder mehreren Eingängen sind nicht gemessen; was die Messreihen über Zufallssysteme sagen (B8), gilt nur für die dort beschriebene Familie.
 - **Keine Neuheitsaussage.** Die Rückführdifferenz-Gleichung und die Schranke sind eigene Herleitung, in diesem Modell an 3 000 Zufallssystemen und von Hand geprüft; ob sie in Lehrbüchern stehen, ist ungelesen. „Kalman-Ungleichung“ steht hier nur als gemessener Befund (stetig ≥ 1 auf dem Gitter), nicht als Beweis.
-- **Quellen.** Doyle (1978) liegt als Scan vor, der laut Quellenbericht als Bild gelesen wurde; die Parameter des Gegenbeispiels sind nachgerechnet, die 60° Phase und die Verstärkung von der Hälfte (−6 dB) bis unbegrenzt sind nach Quellenbericht seine Zuschreibung an Safonov/Athans (im Original nicht gelesen). Für den abgetasteten LQR gibt keine gelesene Quelle eine Reservegarantie.
+- **Quellen.** Doyle (1978) liegt als Scan vor, der als Bild gelesen wurde; die Parameter des Gegenbeispiels sind nachgerechnet, die 60° Phase und die Verstärkung von der Hälfte (−6 dB) bis unbegrenzt sind seine Zuschreibung an Safonov/Athans (im Original nicht gelesen). Für den abgetasteten LQR gibt keine gelesene Quelle eine Reservegarantie.
 - **LQG nur mit Positionsmessung,** zwei Formen, ohne Polvorgabe. Warum die Reserve bei G = B und wachsendem W nicht auf die des Zustands-LQR zurückgeht (Loop-Transfer-Recovery im Diskreten, ob CB = 0 die Ursache ist), ist nicht untersucht. Die 90 Entwürfe sind eine Auswahl von Rauschstärken und -richtungen, keine Stichprobe aus einer Verteilung.
 - **Reserven des Gesetzes mit endlichem Horizont und des MPC mit aktiver Stellgrenze sind nicht gemessen.** Mit aktiver Grenze ist die Schleife nichtlinear; ein Nyquist-Abstand gilt nur im linearen Gebiet.
 - **Phasenreserve nur klassisch** (kleinste Durchtrittsstelle); keine Scheibenreserve, keine strukturierte Singulärwertgrenze. Verstärkungsfehler und Verzug werden nicht gemeinsam betrachtet; der Zeitbereich ist ohne Rauschen.
@@ -166,7 +166,7 @@ Alles, was nicht in dieser Tabelle steht (Rechenzeit, Lesbarkeit der Abbildungen
 
 ## Bewusst nicht umgesetzt
 
-- **Reserven für das Gesetz mit endlichem Horizont und für MPC mit Stellgrenzen** (Stücke der Linie, die ihre Gewinne selbst messen); hier nur der Hinweis, dass die Aussage an der Stellgrenze endet.
+- **Reserven für das Gesetz mit endlichem Horizont und für MPC mit Stellgrenzen** ([`horizont-falle-demo`](https://github.com/sebastian-hanisch/horizont-falle-demo) und [`mpc-stellgrenzen-demo`](https://github.com/sebastian-hanisch/mpc-stellgrenzen-demo) behandeln diese Gesetze selbst); hier nur der Hinweis, dass die Aussage an der Stellgrenze endet.
 - **Entwurf des Filters, Polvorgabe, Loop-Transfer-Recovery:** nicht gelehrt, nur die Reserve des fertigen LQG gemessen.
 - **Scheibenreserve, strukturierte Singulärwertgrenzen, Mehrgrößenstrecken, Strecken mit Nullstelle.**
 - **Verzug als Experiment:** nur die Verzugsreserve als Zahl (Phasenreserve / Durchtrittsfrequenz); wie ein ganzer Verzug den Entwurf kippt, misst die Demo [`regelung-verzug-demo`](https://github.com/sebastian-hanisch/regelung-verzug-demo).
@@ -193,4 +193,4 @@ Gebaut mit Streamlit, Plotly, NumPy, SciPy und pandas.
 
 ---
 
-Diese Demo ist Teil des Portfolios von [Sebastian Hanisch](https://sebastianhanisch.net) – Operations Research und Machine Learning ([Über mich](https://sebastianhanisch.net/ueber-mich.html)). Mehr zu den Demos: [Interaktive Demos](https://sebastianhanisch.net/demos.html).
+Diese Demo ist Teil des Portfolios von [Sebastian Hanisch](https://sebastianhanisch.net) – Operations Research und Machine Learning ([Über mich](https://sebastianhanisch.net/ueber-mich.html)). Mehr zur Reihe: [Regelung von LQR bis MPC: vom Plan zur Regel](https://sebastianhanisch.net/konzepte-regelung.html).

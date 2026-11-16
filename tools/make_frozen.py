@@ -9,7 +9,7 @@ Inhalt:
   kalman  die stetige Kalman-Ungleichung min|1 + L| ≥ 1 an 3 000 Zufallssystemen (Zufalls-Seed 15, SplitMix64)
 
 Rechenzeit: etwa eine halbe Minute (vorgerechnet, damit die App nicht warten muss). Die Zufallssysteme kommen aus dem ganzzahligen SplitMix64 mit
-exakten Logarithmus- und Kosinus-Routinen (res_rng.py), nicht aus dem NumPy-Generator der Vormessung: die Zählungen sind eine eigene Neumessung."""
+exakten Logarithmus- und Kosinus-Routinen (res_rng.py), nicht aus dem NumPy-Generator: die Zählungen gelten für diesen Zufallsstrom."""
 
 import json
 import sys

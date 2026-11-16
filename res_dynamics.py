@@ -1,10 +1,10 @@
 """Kern 1: die Strecken (Wagen, Skalar), der LQR-Gewinn (DARE und CARE) und der Zeitbereich.
 
 Konvention überall: u = −K·x (Faktor ½ in den Kosten nicht benutzt), Zustandsgleichung x⁺ = A·x + B·u, Kosten Σ xᵀQx + uᵀRu mit Q = I und einem Eingang (R eine Zahl).
-Der Wagen ist der Doppelintegrator mit Abtastzeit Ts: A = [[1, Ts], [0, 1]]; „Euler-Form“ B = (0, Ts)ᵀ (die Form der Linie), „Halte-Form“ B = (Ts²/2, Ts)ᵀ (exakte
+Der Wagen ist der Doppelintegrator mit Abtastzeit Ts: A = [[1, Ts], [0, 1]]; „Euler-Form“ B = (0, Ts)ᵀ (wie in den anderen Regelungs-Demos), „Halte-Form“ B = (Ts²/2, Ts)ᵀ (exakte
 Diskretisierung bei konstanter Stellgröße). Kosten Ts·(Q, R) und (Q, R) geben denselben Gewinn: Q und R werden gemeinsam skaliert, K ändert sich nicht.
 
-Herkunft: neu geschrieben nach Plan 04 der Linie „Regelung“; nichts aus anderen Demos importiert. Die DARE löst `scipy.linalg.solve_discrete_are`; die eigene
+Herkunft: neu geschrieben; nichts aus anderen Demos importiert. Die DARE löst `scipy.linalg.solve_discrete_are`; die eigene
 Riccati-Rekursion (`riccati_iteration`) ist der zweite Rechenweg für die Orakel-Tests und die Anzeige der Schrittzahl."""
 
 import numpy as np

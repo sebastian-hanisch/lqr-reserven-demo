@@ -69,7 +69,7 @@ def _riccati_ohne_symmetrisierung(a, b, q, r, tol=1e-12, max_iter=5000):
 
 
 def test_riccati_iteration_without_symmetrization_fails_on_unstable_a_only():
-    """README „Befunde und Korrekturen“: Zufalls-Seed 4, 25 Systeme, Toleranz 1e-12, höchstens 5 000 Schritte: 13 von 25 scheitern (mit dem Demo-Code gemessen),
+    """README „Hinweise zu den Zahlen“: Zufalls-Seed 4, 25 Systeme, Toleranz 1e-12, höchstens 5 000 Schritte: 13 von 25 scheitern (mit dem Demo-Code gemessen),
     alle mit instabilem A. Die Zahl hängt an der Abbruchregel (Toleranz 1e-10: 9, 1e-9: 4), deshalb hier als Band geprüft."""
     rng = SplitMix64(4)
     failed = 0

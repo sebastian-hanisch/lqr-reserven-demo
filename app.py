@@ -1,7 +1,7 @@
 """Reserven: Wie viel Modellfehler hält ein LQR aus? - interaktive Konzept-Demo
 Sebastian Hanisch - Operations Research und Machine Learning
 
-Stück 4 der Linie „Regelung (von LQR bis MPC)“: der LQR am Wagen (Doppelintegrator), gemessen an drei Reserven (Nyquist-Abstand, Verstärkungsfenster,
+Demo zum Thema „Regelung (von LQR bis MPC)“: der LQR am Wagen (Doppelintegrator), gemessen an drei Reserven (Nyquist-Abstand, Verstärkungsfenster,
 Phasenreserve): stetig (Garantie), abgetastet (keine) und mit Schätzer (LQG, Doyles Gegenbeispiel). Alles eigene Nachrechnung in diesem Modell.
 
 Lauffähig mit: streamlit run app.py
@@ -119,10 +119,10 @@ Weiter unten: das **Nyquist-Bild**, die **Kernfragen** mit Verdikt, sechs Experi
 with st.expander("So funktioniert die Reserve", expanded=True):
     st.markdown(
         """
-1. **Konvention:** Strecke x⁺ = A·x + B·u, Regler **u = −K·x**, Kosten Σ xᵀQx + uᵀRu mit Q = I (kein Faktor ½). Der Wagen hat A = [[1, Ts], [0, 1]] und in der Euler-Form (der Form der Linie) B = (0, Ts)ᵀ; die Halte-Form hat B = (Ts²/2, Ts)ᵀ.
+1. **Konvention:** Strecke x⁺ = A·x + B·u, Regler **u = −K·x**, Kosten Σ xᵀQx + uᵀRu mit Q = I (kein Faktor ½). Der Wagen hat A = [[1, Ts], [0, 1]] und in der Euler-Form (wie in den anderen Regelungs-Demos) B = (0, Ts)ᵀ; die Halte-Form hat B = (Ts²/2, Ts)ᵀ.
 2. **Schleife öffnen:** Aufgetrennt am Streckeneingang ist L(z) = K·(zI − A)⁻¹·B. Je näher die Ortskurve L(e^{jω}) an **−1** kommt, desto weniger Modellfehler hält der Kreis aus.
 3. **Drei Reserven:** der **Nyquist-Abstand** min |1 + L|, das **Verstärkungsfenster** (Bereich des Faktors g in u = −g·K·x, in dem die Schleife stabil bleibt) und die **Phasenreserve** (180° + arg L bei |L| = 1). Die **Verzugsreserve** ist die Phasenreserve geteilt durch die Durchtrittsfrequenz, in Perioden.
-4. **Stetig gegen abgetastet:** Beim stetigen LQR zeigt die Messung in dieser Demo überall Abstand ≥ 1 (klassische Garantie, laut Quellenbericht bei Doyle, 1978: Phase ab 60°, Verstärkung nach unten bis auf die Hälfte und nach oben unbegrenzt; im Original nicht gelesen). Für den abgetasteten Entwurf gibt keine gelesene Quelle eine solche Garantie; hier wird gemessen.
+4. **Stetig gegen abgetastet:** Beim stetigen LQR zeigt die Messung in dieser Demo überall Abstand ≥ 1 (klassische Garantie, bei Doyle, 1978, als Scan-Bild gelesen: Phase ab 60°, Verstärkung nach unten bis auf die Hälfte und nach oben unbegrenzt; im Original nicht gelesen). Für den abgetasteten Entwurf gibt keine gelesene Quelle eine solche Garantie; hier wird gemessen.
         """
     )
 
@@ -137,7 +137,7 @@ with st.sidebar:
     st.markdown("**Entwurf am Wagen** (gilt für Ergebnis, Kernfragen und die Experimente 2, 3, 5 und 6)")
     r = st.select_slider("Stellgewicht R", options=C.R_OPTIONS, key="r_select", format_func=de_g, help="Kosten Σ xᵀx + R·u²: kleines R heißt starker Eingriff und schnellen Entwurf.")
     ts = st.select_slider("Abtastzeit Ts", options=C.TS_OPTIONS, key="ts_select", format_func=de_g, help="Voreinstellung 1: die Messungen der README gelten dort. Kleine Ts nähern den stetigen Entwurf an.")
-    bform = st.radio("Form von B", C.BFORMS, key="bform_radio", format_func=C.BFORM_LABELS.get, help="Euler: B = (0, Ts)ᵀ, die Form der Linie. Halten: exakte Diskretisierung bei konstanter Stellgröße.")
+    bform = st.radio("Form von B", C.BFORMS, key="bform_radio", format_func=C.BFORM_LABELS.get, help="Euler: B = (0, Ts)ᵀ, wie in den anderen Regelungs-Demos. Halten: exakte Diskretisierung bei konstanter Stellgröße.")
 
 sync_query_params({"r_select": r, "ts_select": ts, "bform_radio": bform})
 
@@ -154,7 +154,7 @@ m2.metric("Verstärkungsfenster oben", de(win[1], 3) if win else "–", delta=f"
           help="Größter Faktor g auf die Streckenverstärkung, bei dem die Schleife noch stabil ist (nach unten: jedes g > 0).")
 m3.metric("Phasenreserve", f"{de(view['pm_deg'], 1)}°" if view["pm_deg"] is not None else "–", delta=f"stetig {de(view['cont_pm'], 1)}°" if view["cont_pm"] is not None else None, delta_color="off")
 m4.metric("Verzugsreserve", f"{de(view['delay'], 3)} Perioden" if view["delay"] is not None else "–", delta_color="off",
-          help="Phasenreserve geteilt durch die Durchtrittsfrequenz: so viel zusätzlicher Verzug (in Perioden) wäre an der Grenze. Der Verzug selbst gehört dem Stück „Verzug“ der Linie.")
+          help="Phasenreserve geteilt durch die Durchtrittsfrequenz: so viel zusätzlicher Verzug (in Perioden) wäre an der Grenze. Der Verzug selbst ist Thema von regelung-verzug-demo.")
 st.plotly_chart(build_nyquist(view), width="stretch", key="nyquist_chart")
 st.caption("Grün: Ortskurve des abgetasteten Entwurfs (gepunktet: negative Frequenzen), rot: Kreis um −1 mit dem kleinsten Abstand, grau gepunktet: Kreis der Schranke r₀ (Experiment 6), "
            "orange: der stetige Entwurf mit demselben R und der Kreis vom Radius 1. Kurvenstücke jenseits von Betrag 2,5 sind abgeschnitten (für ω → 0 läuft die Kurve ins Unendliche).")
@@ -250,7 +250,7 @@ st.markdown("---")
 
 st.subheader("🔬 Experiment 4: Doyles Gegenbeispiel (stetig): LQ-Regler mit Filter")
 st.caption("Strecke ẋ = [[1, 1], [0, 1]]·x + (0, 1)ᵀ·u + (1, 1)ᵀ·w, Messung y = x₁ + v; Güte Q = q·(1, 1)ᵀ(1, 1), R = 1, Rauschintensitäten σ und 1, hier q = σ. "
-           "Die Parameter stammen aus einem Quellenbericht (Doyle 1978, Scan als Bild gelesen) und werden hier nur nachgerechnet. m ist die Streckenverstärkung, die das Filter nicht kennt.")
+           "Die Parameter stammen aus Doyle (1978; Scan, als Bild gelesen) und werden hier nur nachgerechnet. m ist die Streckenverstärkung, die das Filter nicht kennt.")
 d1, d2 = st.columns(2)
 with d1:
     q_val = st.select_slider("Gewicht q = Rauschintensität σ", options=C.Q_OPTIONS, key="q_select", format_func=pow10,
@@ -263,7 +263,7 @@ st.plotly_chart(build_doyle(_fan(), q_val, dm_val), width="stretch", key="doyle_
 kind, text = ev.verdict_doyle(q_val, dm_val, dv["window"], dv["lq_lower"], dv["return0"], dv["stable_lqg"], dv["stable_lq"])
 getattr(st, kind)(text)
 st.caption(f"Empfindlichkeitsspitze 1/|1 + L(0)| = {de_g(dv['ms'], 4)} gegen 1 beim LQ-Regler allein. Die untere Kante kommt aus der Hurwitz-Bedingung vierten Grades; "
-           "die Formel des Quellenberichts für die untere Kante ist nur die notwendige Bedingung c₁ > 0 und liegt darunter (Befunde und Korrekturen in der README).")
+           "die zunächst notierte Formel für die untere Kante ist nur die notwendige Bedingung c₁ > 0 und liegt darunter (Hinweise zu den Zahlen in der README).")
 
 st.markdown("---")
 
@@ -399,8 +399,8 @@ und $c_3, c_2$ unabhängig von $m$. Die obere Fensterkante ist $m = 1 + 1/(df)$,
 
 $$\lvert 1 + L(0)\rvert = \frac{1}{1 + d f}$$
 
-**Literatur.** Doyle, J. C. (1978): Guaranteed margins for LQG regulators. IEEE Transactions on Automatic Control 23(4), 756–757 (laut Quellenbericht als Scan-Bild gelesen, im Original nicht von mir gelesen; die Parameter des Gegenbeispiels sind hier nachgerechnet,
-die Aussage „keine garantierten Reserven“ steht laut Quellenbericht dort). Für den abgetasteten LQR ist keine Reservegarantie in einer gelesenen Quelle belegt; die Rückführdifferenz-Gleichung ist hier eigene Herleitung, ob sie in Lehrbüchern steht, ist ungelesen.
+**Literatur.** Doyle, J. C. (1978): Guaranteed margins for LQG regulators. IEEE Transactions on Automatic Control 23(4), 756–757 (als Scan-Bild gelesen, im Original nicht von mir gelesen; die Parameter des Gegenbeispiels sind hier nachgerechnet,
+die Aussage „keine garantierten Reserven“ steht dort). Für den abgetasteten LQR ist keine Reservegarantie in einer gelesenen Quelle belegt; die Rückführdifferenz-Gleichung ist hier eigene Herleitung, ob sie in Lehrbüchern steht, ist ungelesen.
         """
     )
 
@@ -408,5 +408,5 @@ st.markdown("---")
 st.caption(
     "Diese Demo ist Teil des Portfolios von [Sebastian Hanisch](https://sebastianhanisch.net) – "
     "Operations Research und Machine Learning ([Über mich](https://sebastianhanisch.net/ueber-mich.html)). "
-    "Mehr zu den Demos: [Interaktive Demos](https://sebastianhanisch.net/demos.html)."
+    "Mehr zur Reihe: [Regelung von LQR bis MPC: vom Plan zur Regel](https://sebastianhanisch.net/konzepte-regelung.html)."
 )
