@@ -122,7 +122,7 @@ with st.expander("So funktioniert die Reserve", expanded=True):
 1. **Konvention:** Strecke x⁺ = A·x + B·u, Regler **u = −K·x**, Kosten Σ xᵀQx + uᵀRu mit Q = I (kein Faktor ½). Der Wagen hat A = [[1, Ts], [0, 1]] und in der Euler-Form (der Form der Linie) B = (0, Ts)ᵀ; die Halte-Form hat B = (Ts²/2, Ts)ᵀ.
 2. **Schleife öffnen:** Aufgetrennt am Streckeneingang ist L(z) = K·(zI − A)⁻¹·B. Je näher die Ortskurve L(e^{jω}) an **−1** kommt, desto weniger Modellfehler hält der Kreis aus.
 3. **Drei Reserven:** der **Nyquist-Abstand** min |1 + L|, das **Verstärkungsfenster** (Bereich des Faktors g in u = −g·K·x, in dem die Schleife stabil bleibt) und die **Phasenreserve** (180° + arg L bei |L| = 1). Die **Verzugsreserve** ist die Phasenreserve geteilt durch die Durchtrittsfrequenz, in Perioden.
-4. **Stetig gegen abgetastet:** Beim stetigen LQR zeigt die Messung in dieser Demo überall Abstand ≥ 1 (nach Doyle, 1978, laut Quellenbericht 60° Phase und nach oben unbegrenzte Verstärkung). Für den abgetasteten Entwurf gibt keine gelesene Quelle eine solche Garantie; hier wird gemessen.
+4. **Stetig gegen abgetastet:** Beim stetigen LQR zeigt die Messung in dieser Demo überall Abstand ≥ 1 (klassische Garantie, laut Quellenbericht bei Doyle, 1978: Phase ab 60°, Verstärkung nach unten bis auf die Hälfte und nach oben unbegrenzt; im Original nicht gelesen). Für den abgetasteten Entwurf gibt keine gelesene Quelle eine solche Garantie; hier wird gemessen.
         """
     )
 
@@ -347,7 +347,7 @@ st.markdown(
 | **Lineares Gebiet:** keine Stellgrenzen | Mit aktiver Stellgrenze ist die Schleife nichtlinear; ein Nyquist-Abstand gilt nur im linearen Gebiet | [mpc-stellgrenzen-demo](https://github.com/sebastian-hanisch/mpc-stellgrenzen-demo), [windup-pi-demo](https://github.com/sebastian-hanisch/windup-pi-demo) |
 | **K aus dem unendlichen Horizont** | Die Reserve eines Gesetzes mit endlichem Horizont N ist nicht gemessen und kann abweichen | [horizont-falle-demo](https://github.com/sebastian-hanisch/horizont-falle-demo) |
 | **Verzug nur als Zahl** | Die Verzugsreserve ist Phasenreserve / Durchtrittsfrequenz; wie ein ganzer Verzug den Entwurf kippt, misst eine eigene Demo | [regelung-verzug-demo](https://github.com/sebastian-hanisch/regelung-verzug-demo) |
-| **Schätzer nur mit Positionsmessung** | Keine Geschwindigkeitsmessung, keine Polvorgabe; warum die Reserve bei G = B und W → ∞ nicht auf die des Zustands-LQR zurückgeht, ist nicht untersucht | [offsetfrei-demo](https://github.com/sebastian-hanisch/offsetfrei-demo) |
+| **Schätzer nur mit Positionsmessung** | Keine Geschwindigkeitsmessung, keine Polvorgabe; warum die Reserve bei G = B und W bis 10⁸ nicht auf die des Zustands-LQR zurückgeht, ist nicht untersucht | [offsetfrei-demo](https://github.com/sebastian-hanisch/offsetfrei-demo) |
 | **Phasenreserve klassisch** | Nur die kleinste Durchtrittsstelle; keine Scheibenreserve, keine strukturierte Singulärwertgrenze; Verstärkungsfehler und Verzug nicht gemeinsam | – |
 | **Zeitbereich ohne Rauschen** | Die Bahnen sind frei (Anfangszustand, kein Rauschen); die Abklingzeit nahe der Fensterkante ist lang | – |
 """
@@ -399,8 +399,8 @@ und $c_3, c_2$ unabhängig von $m$. Die obere Fensterkante ist $m = 1 + 1/(df)$,
 
 $$\lvert 1 + L(0)\rvert = \frac{1}{1 + d f}$$
 
-**Literatur.** Doyle, J. C. (1978): Guaranteed margins for LQG regulators. IEEE Transactions on Automatic Control 23(4), 756–757 (Scan als Bild gelesen; die Parameter des Gegenbeispiels sind hier nachgerechnet,
-die Aussage „keine garantierten Reserven“ steht dort). Für den abgetasteten LQR ist keine Reservegarantie in einer gelesenen Quelle belegt; die Rückführdifferenz-Gleichung ist hier eigene Herleitung, ob sie in Lehrbüchern steht, ist ungelesen.
+**Literatur.** Doyle, J. C. (1978): Guaranteed margins for LQG regulators. IEEE Transactions on Automatic Control 23(4), 756–757 (laut Quellenbericht als Scan-Bild gelesen, im Original nicht von mir gelesen; die Parameter des Gegenbeispiels sind hier nachgerechnet,
+die Aussage „keine garantierten Reserven“ steht laut Quellenbericht dort). Für den abgetasteten LQR ist keine Reservegarantie in einer gelesenen Quelle belegt; die Rückführdifferenz-Gleichung ist hier eigene Herleitung, ob sie in Lehrbüchern steht, ist ungelesen.
         """
     )
 

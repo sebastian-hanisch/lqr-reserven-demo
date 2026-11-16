@@ -53,6 +53,34 @@ def test_dare_riccati_iteration_agrees_with_scipy_on_random_systems():
     assert checked >= 12
 
 
+def _riccati_ohne_symmetrisierung(a, b, q, r, tol=1e-12, max_iter=5000):
+    """Dieselbe Rekursion wie `D.riccati_iteration`, aber ohne Symmetrisierung; False, wenn sie nicht endlich bleibt oder nicht konvergiert."""
+    p = q.copy()
+    for _ in range(max_iter):
+        with np.errstate(all="ignore"):
+            pb = p @ b
+            nxt = q + a.T @ p @ a - a.T @ pb @ np.linalg.solve(np.array([[float(r)]]) + b.T @ pb, pb.T @ a)
+        if not np.all(np.isfinite(nxt)):
+            return False
+        if np.max(np.abs(nxt - p)) <= tol * max(1.0, np.max(np.abs(nxt))):
+            return True
+        p = nxt
+    return False
+
+
+def test_riccati_iteration_without_symmetrization_fails_on_unstable_a_only():
+    """README „Befunde und Korrekturen“: Zufalls-Seed 4, 25 Systeme, Toleranz 1e-12, höchstens 5 000 Schritte: 13 von 25 scheitern (mit dem Demo-Code gemessen),
+    alle mit instabilem A. Die Zahl hängt an der Abbruchregel (Toleranz 1e-10: 9, 1e-9: 4), deshalb hier als Band geprüft."""
+    rng = SplitMix64(4)
+    failed = 0
+    for _ in range(25):
+        a, b, q, r = M.random_system(rng)
+        if not _riccati_ohne_symmetrisierung(a, b, q, r):
+            failed += 1
+            assert np.max(np.abs(np.linalg.eigvals(a))) >= 1.0
+    assert 11 <= failed <= 15
+
+
 def test_continuous_lqr_double_integrator_closed_form_and_care_residual():
     ac, bc = D.wagen_stetig()
     for r in (1.0, 0.1, 0.01):
